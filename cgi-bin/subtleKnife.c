@@ -102,7 +102,7 @@
 #define ymdayfile "yearmonthday" // a bed file
 #define Rose_input_fn "input_bed_file"
 #define trashDir "/usr/lib/trash"
-#define WWWT "/var/www/browser/t"
+#define WWWT "/var/www/html/browser/t"
 #define BINdir "."
 #define Mysqlserver "localhost"
 #define Mysqluser "hguser"
@@ -121,14 +121,14 @@
 */
 
 struct slNode
-    { 
+    {
     /* covers tnode, and track */
     struct slNode *next;
     char *name;
 	char **arr;
     };
 struct tnode
-    { 
+    {
     /*
 	for cgiparamsl:
 	t1: key
@@ -156,7 +156,7 @@ struct nsortItem
 	};
 struct genericItem
 	{
-	/* to include beditem and readitem 
+	/* to include beditem and readitem
 	when only coordinate is concerned
 	and when bed/sam format cannot be sured
 	*/
@@ -216,7 +216,7 @@ struct userData
 	};
 
 struct nnode
-    { 
+    {
     // for genestruct
     struct nnode *next;
     int chrIdx;
@@ -233,13 +233,13 @@ struct nnode
     };
 
 struct urlpiece
-    { 
+    {
     // a piece of loooong url
     int offset;
     char *text;
     };
 struct track
-    { 
+    {
     /* both for track and density track */
     struct track *next;
     char *name;
@@ -424,7 +424,7 @@ struct tnode *cgiparamsl=NULL;
 struct track *brokenbeads=NULL;
 
 /**********************************
-          tiny functions 
+          tiny functions
  *********************************/
 void done()
 {
@@ -510,12 +510,12 @@ struct slNode *el, *next;
 
 next = *ppt;
 while (next != NULL)
-{    
+{
 	el = next;
 	next = el->next;
 	el->next = newList;
 	newList = el;
-}    
+}
 *ppt = newList;
 }
 
@@ -817,30 +817,30 @@ void strDecode(char *in, char *out, int inLength)
 char c;
 int i;
 for (i=0; i<inLength;++i)
-	{    
+	{
 	c = *in++;
         /* add support when url has '+'
-	if (c == '+') 
+	if (c == '+')
 		{
-		*out++ = ' '; 
+		*out++ = ' ';
 		}
-	else if (c == '%') 
+	else if (c == '%')
         */
-	if (c == '%') 
+	if (c == '%')
 		{
 		int code;
 		if (sscanf(in, "%2x", &code) != 1)
-			code = '?'; 
+			code = '?';
 		in += 2;
 		i += 2;
 		*out++ = code;
-		}    
-	else 
+		}
+	else
 		{
-		*out++ = c; 
+		*out++ = c;
 		}
 	}
-*out++ = 0; 
+*out++ = 0;
 }
 
 char *strEscape(char *oldstr)
@@ -928,7 +928,7 @@ return re;
 
 char *mysqlGetOnestring(char *query)
 {
-/* upon any failure, return NULL 
+/* upon any failure, return NULL
 free after use
 */
 MYSQL_RES *sr = mysqlGetResult(query);
@@ -1029,7 +1029,7 @@ for(; sl!=NULL; sl=sl->next)
 }
 
 /**********************************
-         small functions 
+         small functions
  *********************************/
 
 struct beditem *slSort_beditem(struct beditem *sl, int(*compare)(const void *el1, const void *el2))
@@ -1810,8 +1810,8 @@ return data;
 
 int juiceboxChooseBinsize(struct region *r){
 //Unknown resolution: BP_0
-//This data set has the following bin sizes (in bp): 
-//2500000 1000000 500000 250000 100000 50000 25000 10000 5000 
+//This data set has the following bin sizes (in bp):
+//2500000 1000000 500000 250000 100000 50000 25000 10000 5000
 int reglen = r->dstop - r->dstart;
 fprintf(stderr,"********dstart, %d; dstop, %d\n",r->dstart, r->dstop);
 int scale=50, binsize;
@@ -2042,7 +2042,7 @@ double *tabixQuery_bedgraph_dsp(struct displayedRegion *dsp, struct track *tk)
 
 double *data = malloc(sizeof(double) * dsp->usedSummaryNumber);
 int i;
-for(i=0; i<dsp->usedSummaryNumber; i++) 
+for(i=0; i<dsp->usedSummaryNumber; i++)
     data[i] = NAN;
 
 if(tk->ft==FT_bigwighmtk_n || tk->ft==FT_bigwighmtk_c)
@@ -2173,7 +2173,7 @@ if(fin==NULL)
 	}
 int *data = malloc(sizeof(int) * dsp->usedSummaryNumber);
 int i;
-for(i=0; i<dsp->usedSummaryNumber; i++) 
+for(i=0; i<dsp->usedSummaryNumber; i++)
     data[i] = -1;
 i = 0;
 struct region *r;
@@ -2355,10 +2355,10 @@ void computeEntireLength_itemlist(struct displayedRegion *dsp)
 // curbed by dsp->head and dsp->tail, tell tail by item name
 dsp->entireLength = 0;
 struct region *r;
-for(r=dsp->head; ; r=r->next) 
+for(r=dsp->head; ; r=r->next)
     {
     dsp->entireLength += r->dstop - r->dstart;
-    if(strcmp(r->name, dsp->tail->name) == 0) 
+    if(strcmp(r->name, dsp->tail->name) == 0)
         break;
     }
 if(SQUAWK) fprintf(Squawk, "entire length computed: %ld...\n", dsp->entireLength);
@@ -2377,7 +2377,7 @@ boolean trycomputeSummarySize_bplevel(struct displayedRegion *dsp, int spnum)
 /* spnum: expected ceiling of summary points, usually hmSpan or 3*hmSpan?
 
    computeEntireLength must have been called before this
-   if at bp level: 
+   if at bp level:
       summary size will equal to seq length
       return true
    else:
@@ -2529,7 +2529,7 @@ if(SQUAWK) fprintf(Squawk, "\tsummary size computed, %d used in total...\n", dsp
 void makeRegionSl_genome(struct displayedRegion *dsp)
 {
 /* setDspBoundary() must be run prior to this
-   make list of regions between dsp->head and dsp->tail, 
+   make list of regions between dsp->head and dsp->tail,
    one region for each chromosome
  */
 struct point *start = dsp->start, *stop = dsp->stop;
@@ -2775,7 +2775,7 @@ else
 		}
 	}
 
- 
+
 /****** FIXME ******
    requestRegionAddTail() will set dstart/dstop same as bstart/bstop
    but for cases like drawing decor in juxtaposition mode
@@ -2783,7 +2783,7 @@ else
 
    if dsp->start is within dsp->head, reset head->dstart using start->coord,
    if dsp->stop is within dsp->tail, reset tail->dstop using stop->coord
-   
+
    is this reliable??
  *******************/
 if((dsp->start->chromIdx == dsp->head->chromIdx) &&
@@ -2800,7 +2800,7 @@ if((dsp->stop->chromIdx == dsp->tail->chromIdx) &&
     if(SQUAWK) fputs("\treset dsp->tail->dstop using dsp->stop->coord\n", Squawk);
     dsp->tail->dstop = dsp->stop->coord;
     }
-if(SQUAWK) 
+if(SQUAWK)
     {
     int i=0;
     struct region *r;
@@ -2902,7 +2902,7 @@ long moveBoundary_genome(struct displayedRegion *dsp, char side, long distance, 
 {
 if(SQUAWK)
     fprintf(stderr, "moveBoundary_genome distance: %ld spnum: %d spsize: %f\n", distance, *spnum, spsize);
-/* move a point along genome, out side of existing list, 
+/* move a point along genome, out side of existing list,
    always need to extend/add new regions to list
 
    args:
@@ -3033,7 +3033,7 @@ if(spnum <= 0) return;
 
 if(item != NULL)
 	{
-	/* form new regions using remaining bed items in this chromosome 
+	/* form new regions using remaining bed items in this chromosome
 	will append to head
 	*/
 	struct region *r = newRegionFromBeditem(hRegion->chromIdx, item);
@@ -3121,7 +3121,7 @@ while(chrIdx >= 0)
 
 
 
-void moveBoundary_gf_right(struct displayedRegion *dsp, long distance, int spnum) 
+void moveBoundary_gf_right(struct displayedRegion *dsp, long distance, int spnum)
 {
 /* growing on right
 must re-sort all itemsl as it might have been modified in moveBoundary_gf_left()
@@ -3178,7 +3178,7 @@ if(item != NULL)
 			extendRegionDstop(r, spsize, &spnum, dsp->atbplevel);
 			dspAddRegionTail(dsp, r);
 			if(spnum <= 0) return;
-			
+
 			// if program continues, make new region
 			r = newRegionFromBeditem(tRegion->chromIdx, item);
 				r->dstart = r->dstop = r->bstart;
@@ -3414,7 +3414,7 @@ return FALSE; // merely...
 
 long moveBoundary_list_which(struct displayedRegion *dsp, char which, char side, long distance)
 {
-/* same code for genome/gf 
+/* same code for genome/gf
 
    args:
       which: h/t telling if it's head or tail that moves
@@ -3719,7 +3719,7 @@ if(trycomputeSummarySize_bplevel_itemlist(dsp, hmSpan))
     computeSummarySize_bplevel(dsp);
     return;
     }
-    
+
 computeSummarySize_itemlist(dsp);
 
 float spsize = (float)dsp->entireLength / dsp->usedSummaryNumber;
@@ -4231,7 +4231,7 @@ if(gparam->parse_json)
 						(gene->exons)[j]=a;
 						}
 					isthick=0;
-					} 
+					}
 				else if(isthin)
 					{
 					if(t2.size<=0)
@@ -4471,7 +4471,7 @@ if(tt->mode==M_den)
 	for(r=dsp->head; r!=NULL; r=r->next)
 		{
 		double *data = malloc(sizeof(double)*r->summarySize);
-		for(i=0; i<r->summarySize; i++) 
+		for(i=0; i<r->summarySize; i++)
 			{
 			data[i] = 0;
 			}
@@ -4504,7 +4504,7 @@ if(tt->ft==FT_lr_n||tt->ft==FT_lr_c)
 	will only fetch items whose mate is within the region list
 	to restrict the amount of retrieved data with hi-c tracks
 
-	difference with 
+	difference with
 	- always apply score cutoff
 	- no stacking, for arc or trihm mode
 	- may apply within region filtering
@@ -4720,7 +4720,7 @@ if(tt->ft==FT_bigbed_c){
 	/* no max stack limit for LD, or simply give it a large number
 	*/
 	int stackNumber= MaxStack * ((tt->ft==FT_ld_n||tt->ft==FT_ld_c)?100:1);
-		
+
 	int stackIdx;
 	int stack[stackNumber];
 	char delim[] = "\t";
@@ -4745,7 +4745,7 @@ if(tt->ft==FT_bigbed_c){
 		struct genericItem *itemsl=beditemsort_startAsc(data[dataidx]);
 		for(item=itemsl; item!=NULL; item=item->next)
 			{
-				/** is bed item, 
+				/** is bed item,
 				TODO old bed format, make it obsolete
 				**/
 				// chop up item->rest
@@ -4766,7 +4766,7 @@ if(tt->ft==FT_bigbed_c){
 					break;
 					}
 				}
-			if(notStacked) 
+			if(notStacked)
 				{
 				skipCount++;
 				continue;
@@ -4811,7 +4811,7 @@ if(tt->ft==FT_bed_n||tt->ft==FT_bed_c||tt->ft==FT_bam_n||tt->ft==FT_bam_c||tt->f
 	/* no max stack limit for LD, or simply give it a large number
 	*/
 	int stackNumber= MaxStack * ((tt->ft==FT_ld_n||tt->ft==FT_ld_c)?100:1);
-		
+
 	int stackIdx;
 	int stack[stackNumber];
 	char delim[] = "\t";
@@ -4844,7 +4844,7 @@ if(tt->ft==FT_bed_n||tt->ft==FT_bed_c||tt->ft==FT_bam_n||tt->ft==FT_bam_c||tt->f
 			{
 			if(is_bed)
 				{
-				/** is bed item, 
+				/** is bed item,
 				TODO old bed format, make it obsolete
 				**/
 				// chop up item->rest
@@ -4868,7 +4868,7 @@ if(tt->ft==FT_bed_n||tt->ft==FT_bed_c||tt->ft==FT_bam_n||tt->ft==FT_bam_c||tt->f
 					break;
 					}
 				}
-			if(notStacked) 
+			if(notStacked)
 				{
 				skipCount++;
 				continue;
@@ -5546,7 +5546,7 @@ if(type==4)
 	t->next=NULL;
 	return t;
 	}
-	
+
 char delim[]=",";
 char *tok=strtok(tknamelst,delim);
 while(tok!=NULL)
@@ -5636,7 +5636,7 @@ boolean atfirst=TRUE;
 struct region *r;
 for(r=dsp->head; r!=NULL; r=r->next)
 	{
-	assert(asprintf(&new, "%s%s,%d,%d,%d,%d,%d,%d,%d,%c,%d,", 
+	assert(asprintf(&new, "%s%s,%d,%d,%d,%d,%d,%d,%d,%c,%d,",
 		old,
 		r->name,
 		r->chromIdx,
@@ -5745,7 +5745,7 @@ return path2;
 //dli
 int line_count(FILE *fp) {
     int lines=0;
-    char ch; 
+    char ch;
     while(!feof(fp))
     {
         ch = fgetc(fp);
@@ -5782,7 +5782,7 @@ if(SQUAWK) fputs(">>>>>\n", Squawk);
 
 
 {
-	/* initiate cgi hash 
+	/* initiate cgi hash
 	this program only deals with "get", not "post"
 	all parameters passed via cgi must be escaped and be decoded here
 	** no empty value allowed, e.g. k1=v1&k2=&k3=v3&...
@@ -6286,7 +6286,7 @@ if(cgiVarExists("refreshcusttkcache"))
 			{
 			printf("'error':'failed to read bam file',");
 			}
-		else 
+		else
 			{
 			if(bam_parseIndex(url,ft)==NULL)
 				{
@@ -6307,7 +6307,7 @@ if(cgiVarExists("refreshcusttkcache"))
 			ti_close(fin);
 			}
 		}
-	else 
+	else
 		{
 		tabix_t *fin=tabixOpen(url,TRUE);
 		if(fin==NULL) printf("'error':'failed to refresh cache',");
@@ -6514,7 +6514,7 @@ if(cgiVarExists("super"))
 			start=strtok(NULL,delim);
 			stop=strtok(NULL,delim);
 			num_loci=strtok(NULL,delim);
-			strtok(NULL,delim); // constituent size 
+			strtok(NULL,delim); // constituent size
 			ranksignal=strtok(NULL,delim);
 			if(hasCtrl)
 				{
@@ -7116,7 +7116,7 @@ if(cgiVarExists("listkeggpathway"))
 	fclose(fin);
 	unlink(outfile);
 	return 1;
-	}	
+	}
 
 
 
@@ -7360,7 +7360,7 @@ if(cgiVarExists("saveSession"))
 
 if(cgiVarExists("pastSession"))
     {
-    /* retrieve saved status for a past session, 
+    /* retrieve saved status for a past session,
        display on client side for user to choose which one to restore
      */
     char *session2use = cgiString("pastSession"); // session on which info will be retrieved
@@ -8067,7 +8067,7 @@ if(cgiVarExists("makegeneplot"))
 	// 0: gsv, 2: standalone
 
     /***************************
-       Step 1, parse items 
+       Step 1, parse items
      ***************************/
     struct nnode *itemsl = NULL, *item;
 
@@ -8252,7 +8252,7 @@ if(cgiVarExists("makegeneplot"))
 				}
 			else
 				{
-				for(i=0; i<spnum; i++) 
+				for(i=0; i<spnum; i++)
 					sumdata[i]=0;
 				int exon_use_count= 0;
 				int exonidx=0;
@@ -8261,7 +8261,7 @@ if(cgiVarExists("makegeneplot"))
 					regionstop=(thisgene->exons)[exonidx][1];
 					if(regionstart>=regionstop)
 						continue;
-					for(i=0; i<spnum; i++) 
+					for(i=0; i<spnum; i++)
 						tmpdata[i]=0;
 					if(isTabix)
 						tabixQuery_bedgraph(fin, chrInfo[item->chrIdx]->name, regionstart, regionstop, spnum, &tmpdata[0], summeth_mean);
@@ -8292,7 +8292,7 @@ if(cgiVarExists("makegeneplot"))
 				}
 			else
 				{
-				for(i=0; i<spnum; i++) 
+				for(i=0; i<spnum; i++)
 					sumdata[i]=0;
 				int intronidx=0;
 				int intron_use_count=0;
@@ -8310,7 +8310,7 @@ if(cgiVarExists("makegeneplot"))
 					}
 					if(regionstart>=regionstop)
 						continue;
-					for(i=0; i<spnum; i++) 
+					for(i=0; i<spnum; i++)
 						tmpdata[i] = 0;
 					if(isTabix)
 						{
@@ -8345,7 +8345,7 @@ if(cgiVarExists("makegeneplot"))
 				}
 			else
 				{
-				for(i=0; i<spnum; i++) 
+				for(i=0; i<spnum; i++)
 					tmpdata[i] = 0;
 				regionstart=thisgene->utr3start;
 				regionstop=thisgene->utr3start+thisgene->utr3width;
@@ -8709,7 +8709,7 @@ if(cgiVarExists("makegeneplot"))
 			printf("\"image\":\"%s\"", pngfile);
 		/*** s1 and s3 finishes ***/
 		}
-    
+
 
     /*********************************
        Step 5
@@ -9001,9 +9001,9 @@ based on "normal", dsp might be altered by following triggers:
 3. move
 
 Operations that will change zoom level will only be provided with dsp view boundaries,
-no number of summary point will be given, 
+no number of summary point will be given,
 an extension from one hmSpan to 3*hmSpan will be attempted.
-Such includes: 
+Such includes:
   - zoom in/out
   - change GF
   - jump
@@ -9240,7 +9240,7 @@ if(trigger_genesetview)
 				computeSummarySize(hm.dsp, cgiInt("sptotalnum"));
 				}
 			}
-		if(0) 
+		if(0)
 			{
 			fprintf(stderr, "usedSummaryNumber: %d\n", dsp.usedSummaryNumber);
 			showRegionSl(hm.dsp);
@@ -9631,7 +9631,7 @@ else
 							}
 						if(itemsl==NULL)
 							{
-							if(lookChrIdx == lastChrIdx) 
+							if(lookChrIdx == lastChrIdx)
 								break;
 							lookChrIdx++;
 							}
@@ -9683,7 +9683,7 @@ else
 						{
 						if(itemsl->start <= r->bstop && itemsl->stop > r->bstop)
 							r->bstop = itemsl->stop;
-						else 
+						else
 							break;
 						}
 					}
@@ -9704,8 +9704,8 @@ else
 				else
 					moveBoundary_gf_right(hm.dsp, mDistance, mSummarySize);
 				}
-			if(SQUAWK) fprintf(Squawk, "dsp.head: %s:%d-%d   dsp.tail: %s:%d-%d\n\n", 
-				chrInfo[dsp.head->chromIdx]->name, dsp.head->dstart, dsp.head->dstop, 
+			if(SQUAWK) fprintf(Squawk, "dsp.head: %s:%d-%d   dsp.tail: %s:%d-%d\n\n",
+				chrInfo[dsp.head->chromIdx]->name, dsp.head->dstart, dsp.head->dstop,
 				chrInfo[dsp.tail->chromIdx]->name, dsp.tail->dstart, dsp.tail->dstop);
 
 			computeEntireLength(hm.dsp);
@@ -9717,7 +9717,7 @@ else
 				}
 			computeUsedSummaryNumber(hm.dsp);
 			}
-		else 
+		else
 			{
 			if(SQUAWK) fputs("not moving...\n", Squawk);
 			/****************************
@@ -9745,7 +9745,7 @@ else
 				else
 					makeRegionSl_gf(hm.dsp);
 				computeEntireLength(hm.dsp);
-				if(trigger_zoom) 
+				if(trigger_zoom)
 					{
 					double zoomoutPerc = cgiDouble("zoom"); // >0
 					if(SQUAWK) fprintf(Squawk, "zoom out by %.2f...\n", zoomoutPerc);
@@ -9843,11 +9843,11 @@ if(trigger_changeGF || trigger_zoom || trigger_move || trigger_imgAreaSelect || 
 		// skip region with 0 summarySize
 		if(r->summarySize == 0)
 			continue;
-		printf("['%s',%d,%d,%d,%d,%d,'%s'],", 
-			chrInfo[r->chromIdx]->name, 
-			r->bstart, r->bstop, 
-			r->dstart, r->dstop, 
-			r->summarySize, 
+		printf("['%s',%d,%d,%d,%d,%d,'%s'],",
+			chrInfo[r->chromIdx]->name,
+			r->bstart, r->bstop,
+			r->dstart, r->dstop,
+			r->summarySize,
 			(cgiVarExists("itemlist")||trigger_newitemlist)?r->name:""
 			);
 		}
@@ -9945,7 +9945,7 @@ if((hm.decor9!=NULL || hm.decor10!=NULL || hm.decor30!=NULL) && (!cgiVarExists("
 			fprintf(stderr,"dsp filter: %s %d %d\n", chrInfo[fi->chrIdx]->name, fi->start, fi->stop);
 			}
 	}
-	
+
 
 printf("tkdatalst:[");
 
@@ -10158,7 +10158,7 @@ if(hm.trackSl!=NULL)
 							}
 						fclose(fout);
 						}
-					else 
+					else
 						{
 						fputs("fetching hmtk data: unknown filetype\n",stderr);
 						}
@@ -10188,7 +10188,7 @@ if(hm.trackSl!=NULL)
 					/* ft-specific treatment */
 					double *data = malloc(sizeof(double)*dsp.usedSummaryNumber);
 					FILE *fin = fopen(tk->tmpfile, "r");
-					if(fin == NULL) 
+					if(fin == NULL)
 						{
 						/* error! file missing!
 						*/
